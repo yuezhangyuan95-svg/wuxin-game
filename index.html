@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>武新电气 · 经营模拟</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<!-- ================= 开始界面 ================= -->
+<div class="start-wrap" id="start-view">
+  <div class="start-card">
+    <div class="start-title">武新电气 · 经营模拟</div>
+    <div class="start-sub">30 天经营周期 · 固定 2x 实时流逝 · 商机每日一条 · KPI 评分复盘</div>
+    <div class="start-desc">
+      你刚刚接任武新电气总经理——一家经营中的电气设备制造企业。<br>
+      在手订单 7,200 万, 但工厂缺料、订单逾期、应收沉淀, 问题已经埋下。<br>
+      每天 1 个商机实时到达, 报价仅有一次机会; 决策与突发事件不等人。<br>
+      第 30 天结算: KPI 评分(S/A/B/C) + 经营复盘报告。<br>
+      三档难度仅初始资金不同: 新手 8,000 万 / 标准 6,000 万 / 专家 4,500 万。
+    </div>
+    <div class="start-actions">
+      <button class="btn primary" onclick="startNew('新手')">▶ 新游戏 · 新手档(资金 8,000 万)</button>
+      <button class="btn primary" onclick="startNew('标准')">▶ 新游戏 · 标准档(资金 6,000 万)</button>
+      <button class="btn primary" onclick="startNew('专家')">▶ 新游戏 · 专家档(资金 4,500 万)</button>
+      <button class="btn ghost" id="btn-continue" onclick="continueGame()">继续游戏(读取存档)</button>
+    </div>
+    <div class="start-foot">培训版 v1.0 · 完整五个里程碑 · 金额单位: 万元</div>
+  </div>
+</div>
+
+<!-- ================= 游戏 ================= -->
+<div class="app" id="app-view">
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="logo"><div class="logo-mark">武</div><span class="logo-text">武新电气</span></div>
+      <nav class="nav" id="nav">
+        <a href="#" data-view="cockpit" class="active">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M8 8 L11.5 4.5"/><circle cx="8" cy="8" r="1.4" fill="currentColor" stroke="none"/></svg>
+          <span>驾驶舱</span>
+        </a>
+        <a href="#" data-view="inbox">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2a4 4 0 0 1 4 4c0 3 1.5 4 1.5 5.5H2.5C2.5 10 4 9 4 6a4 4 0 0 1 4-4z"/><path d="M6.6 13.5a1.5 1.5 0 0 0 2.8 0"/></svg>
+          <span>收件箱</span>
+          <span class="nav-badge" id="inbox-badge" style="display:none"></span>
+        </a>
+        <a href="#" data-view="orders">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4.5L8 2l6 2.5v7L8 14l-6-2.5v-7z"/><path d="M2 4.5L8 7l6-2.5M8 7v7"/></svg>
+          <span>订单管线</span>
+        </a>
+        <a href="#" data-view="finance">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.2"/><path d="M8 5.2c1.6 0 2.6.9 2.6 2.1 0 1.2-1 2.1-2.6 2.1s-2.6.9-2.6 2.1c0 1.2 1 2.1 2.6 2.1M8 4.8v6.6M5.7 6.4h4.6M5.7 9.8h4.6"/></svg>
+          <span>财务</span>
+        </a>
+        <a href="#" data-view="capacity">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 14.5h13M3 14.5V6l3 2V6l3 2V6l3 2v6.5"/><path d="M6 10.5h1M10 10.5h1"/></svg>
+          <span>产能与物料</span>
+        </a>
+        <a href="#" data-view="report">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 1.5h8v13H4z"/><path d="M6.2 4.5h3.6M6.2 7h3.6M6.2 9.5h3.6M6.2 12h1.8"/></svg>
+          <span>日报</span>
+        </a>
+        <a href="#" data-view="community">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5.6" cy="6" r="2.4"/><path d="M1.6 13.5c.4-2.4 1.9-3.6 4-3.6s3.6 1.2 4 3.6"/><circle cx="11.4" cy="5.6" r="1.9"/><path d="M10.4 9.9c1.8.1 3 .9 3.4 2.7"/></svg>
+          <span>公司动态</span>
+        </a>
+        <a href="#" data-view="handbook">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3.5c1.6-1 3.4-1 5 0 1.6-1 3.4-1 5 0v9c-1.6-1-3.4-1-5 0-1.6-1-3.4-1-5 0v-9z"/><path d="M7 2.5v9"/></svg>
+          <span>经营手册</span>
+        </a>
+        <a href="#" data-view="review">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5.5" r="3.6"/><path d="M5.6 8.7L4.5 14.5l3.5-1.8 3.5 1.8-1.1-5.8M5.5 3.8L2.8 1.5M10.5 3.8l2.7-2.3"/></svg>
+          <span>经营复盘</span>
+        </a>
+      </nav>
+      <div class="side-bottom">
+        <div class="avatar">总</div>
+        <div class="info"><div>总经理</div><div class="switch" onclick="backToStart()">⇄ 退出游戏</div></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <!-- 时间控制条(固定 2x 运行, 无暂停) -->
+        <div class="timebar">
+          <div class="speed-label" id="speed-label" title="固定倍速运行">2x</div>
+          <div class="time-info">
+            <div class="game-clock" id="game-clock">09:00</div>
+            <div class="game-date" id="game-date">—</div>
+          </div>
+          <div class="day-progress" title="经营周期进度"><div class="day-fill" id="day-fill"></div></div>
+          <div class="weather">
+            <svg class="weather-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M4.7 4.7l1.9 1.9M17.4 17.4l1.9 1.9M19.3 4.7l-1.9 1.9M6.6 17.4l-1.9 1.9"/></svg>
+            <div class="weather-info">
+              <div class="weather-temp" id="weather-temp">—</div>
+              <div class="weather-desc" id="weather-desc">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Agent 助手 -->
+        <div class="agent">
+          <div class="agent-trigger" id="agent-trigger" onclick="toggleAgent()">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2.2c-4.2 0-7.4 2.6-7.4 6.3 0 2 1.1 3.7 2.9 4.8L4 15.8l3.1-1.2c.6.1 1.2.2 1.9.2 4.2 0 7.4-2.6 7.4-6.3S13.2 2.2 9 2.2z"/><circle cx="6.4" cy="8.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="9" cy="8.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="11.6" cy="8.5" r="0.9" fill="currentColor" stroke="none"/></svg>
+            <span>Agent: 有什么可以帮你?</span>
+          </div>
+          <div class="agent-panel" id="agent-panel">
+            <div class="agent-head">
+              Agent 助手 <span class="badge">武新经营驾驶舱</span>
+              <button class="agent-close" onclick="closeAgent()" title="退出对话框">✕</button>
+            </div>
+            <div class="agent-body" id="agent-body"></div>
+            <div class="agent-input-row">
+              <input id="agent-input" placeholder="输入问题, Enter 发送, ESC 退出">
+              <button class="agent-send" onclick="sendAgent()">发送</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- ========== 驾驶舱 ========== -->
+      <section class="view active" id="view-cockpit">
+        <div class="assets" id="assets"></div>
+        <div class="grid">
+          <div class="card"><h3>订单管线</h3><div class="list" id="orders"></div></div>
+          <div class="card"><h3>风险速览</h3><div class="list" id="cockpit-risks"></div></div>
+          <div class="card"><h3>财务概览</h3><div class="list" id="cockpit-fin"></div></div>
+          <div class="card"><h3>产能状况</h3><div class="list" id="factories"></div></div>
+        </div>
+      </section>
+
+      <!-- ========== 收件箱 ========== -->
+      <section class="view" id="view-inbox">
+        <div class="row2">
+          <div class="card">
+            <h3>今日待办</h3>
+            <div id="inbox-todos"></div>
+            <div class="todo-foot"><span onclick="openTodoModal()">＋ 新增待办</span><span>审批历史 ›</span></div>
+          </div>
+          <div class="card"><h3>决策收件箱</h3><div class="list" id="decisions"></div></div>
+        </div>
+      </section>
+
+      <!-- ========== 订单管线 ========== -->
+      <section class="view" id="view-orders">
+        <div class="card" style="flex:1"><h3>订单管线 · 商机 → 生产 → 交付 → 回款</h3><div class="list" id="order-pipe"></div></div>
+      </section>
+
+      <!-- ========== 财务 ========== -->
+      <section class="view" id="view-finance">
+        <div class="row2">
+          <div class="card"><h3>应收账龄</h3><div class="fin-fixed" id="fin-fixed"></div><div class="list" id="fin-recv"></div></div>
+          <div class="card"><h3>现金流明细</h3><div class="list" id="fin-flow"></div></div>
+        </div>
+      </section>
+
+      <!-- ========== 产能与物料 ========== -->
+      <section class="view" id="view-capacity">
+        <div class="row2">
+          <div class="card"><h3>工厂产能</h3><div class="list" id="cap-factories"></div></div>
+          <div class="card"><h3>关键物料</h3><div class="list" id="cap-materials"></div></div>
+        </div>
+      </section>
+
+      <!-- ========== 日报 ========== -->
+      <section class="view" id="view-report">
+        <div class="card" style="flex:1"><h3>经营日报 · 每日 18:00 自动生成</h3><div class="list" id="report-list"></div></div>
+      </section>
+
+      <!-- ========== 公司动态 ========== -->
+      <section class="view" id="view-community">
+        <div class="card" style="flex:1"><h3>社区 · 公司动态</h3><div class="list" id="posts"></div></div>
+      </section>
+
+      <!-- ========== 经营手册 ========== -->
+      <section class="view" id="view-handbook">
+        <div class="card" style="flex:1"><h3>经营手册 · 培训讲义</h3><div class="list" id="handbook"></div></div>
+      </section>
+
+      <!-- ========== 经营复盘 ========== -->
+      <section class="view" id="view-review">
+        <div class="card" style="flex:1"><h3>经营复盘 · KPI 评分</h3><div class="list" id="review-box"></div></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- 商机报价弹窗 -->
+<div class="modal-overlay" id="quote-modal" onclick="closeQuoteModal()">
+  <div class="modal quote-modal" onclick="event.stopPropagation()">
+    <h4>商机报价</h4>
+    <div class="q-info" id="quote-info"></div>
+    <div class="q-ai"><span class="ai-tag">AI 建议</span><span id="quote-ai"></span></div>
+    <div class="m-field">
+      <label>你的报价(万元)</label>
+      <input id="quote-price" type="number" min="1" step="1" placeholder="输入报价金额">
+    </div>
+    <div class="q-once">⚠ 报价仅可提交一次, 提交后不可修改</div>
+    <div class="q-feedback" id="quote-feedback"></div>
+    <div class="modal-actions">
+      <button class="btn cancel-btn" onclick="closeQuoteModal()">取消</button>
+      <button class="btn confirm-btn" onclick="submitQuote()">提交报价</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新增待办浮窗 -->
+<div class="modal-overlay" id="todo-modal" onclick="closeTodoModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h4>新增待办</h4>
+    <div class="m-field">
+      <label>待办内容</label>
+      <input id="todo-name" placeholder="例如: 拜访客户 / 部门会议">
+    </div>
+    <div class="m-field">
+      <label>时间</label>
+      <input id="todo-time" placeholder="例如: 14:30(可留空)">
+    </div>
+    <div class="modal-actions">
+      <button class="btn cancel-btn" onclick="closeTodoModal()">取消</button>
+      <button class="btn confirm-btn" onclick="confirmTodo()">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- 轻提示 -->
+<div class="toast" id="toast"></div>
+
+<!-- 商机到达弹窗(驾驶舱居中, 出现时时间暂停) -->
+<div class="modal-overlay opp-overlay" id="opp-modal">
+  <div class="modal opp-modal" onclick="event.stopPropagation()">
+    <h4>📬 新商机到达 · 时间已暂停</h4>
+    <div class="opp-hero" id="opp-modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn cancel-btn" onclick="oppLater()">稍后处理(恢复时间)</button>
+      <button class="btn confirm-btn" onclick="oppGoQuote()">去报价</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/pricing.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/review.js"></script>
+<script src="js/agent.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>
